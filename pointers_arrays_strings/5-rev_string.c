@@ -2,6 +2,9 @@
 /**
  * rev_string - reverses a string
  * @s: string to reverse
+ * lent : length of string
+ * o : counter 0
+ * temp : temporal variable
  */
 
 void rev_string(char *s)
