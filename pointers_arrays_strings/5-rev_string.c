@@ -1,6 +1,4 @@
-
 #include "main.h"
-
 /**
  * rev_string - reverses a string
  * @s: string to reverse
@@ -8,19 +6,18 @@
 
 void rev_string(char *s)
 {
-	int i;
-	int o;
+	int lent = 0;
+	int o = 0;
+	char temp;
 
-	i = 0;
-	while (s[i] != 0)
+	while (s[lent] != '\0')
 	{
-		i++;
+		lent++;
 	}
-	o = i - 1;
-	while (o >= 0)
+	for (lent--; lent > o; lent--, o++)
 	{
-		_putchar(s[o]);
-		o--;
+		temp = s[lent];
+		s[lent] = s[o];
+		s[o] = temp;
 	}
-	_putchar('\n');
 }
