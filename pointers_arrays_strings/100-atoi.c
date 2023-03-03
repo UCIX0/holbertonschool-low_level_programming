@@ -11,6 +11,9 @@ int _atoi(char *s)
 	int negatigncount = 0;
 	int unit = 0;
 
+	if (s == "")
+	{return (0); }
+
 	for (i = 0; s[i] != '\0'; i++)
 	{
 		if (s[i] == '-')
