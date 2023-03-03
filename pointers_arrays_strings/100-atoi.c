@@ -19,7 +19,7 @@ int _atoi(char *s)
 		}
 		if (s[i] <= '9' && s[i] >= '0')
 		{
-			unit = 1;
+			unit++;
 			multiplier++;
 		}
 	}
