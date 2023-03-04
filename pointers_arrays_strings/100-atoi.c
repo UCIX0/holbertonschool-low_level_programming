@@ -9,7 +9,7 @@ int _atoi(char *s)
 	int i;
 	int multiplier = 10;
 	int negatigncount = 0;
-	unsigned num = 0;
+	unsigned int num = 0;
 
 	for (i = 0; s[i] != '\0'; i++)
 	{
