@@ -7,12 +7,10 @@
 int _atoi(char *s)
 {
 	int i;
-	int multiplier = 1;
+	int multiplier = 10;
 	int negatigncount = 0;
-	int unit = 0;
+	int num = 0;
 
-	if (s == NULL)
-	{return (0); }
 	for (i = 0; s[i] != '\0'; i++)
 	{
 		if (s[i] == '-')
@@ -21,9 +19,16 @@ int _atoi(char *s)
 		}
 		if (s[i] <= '9' && s[i] >= '0')
 		{
-			unit++;
-			multiplier++;
+			num = (num * multiplier) + (s[i] - 48);
+			if (s[i + 1] > '9' ||  s[i + 1] < '0')
+			{
+				break;
+			}
 		}
 	}
-	return (1);
+	if (negatigncount % 2 != 0)
+	{
+		num = num * -1;
+	}
+	return (num);
 }
