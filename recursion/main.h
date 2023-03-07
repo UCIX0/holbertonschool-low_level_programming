@@ -8,7 +8,7 @@ int factorial(int n);
 int _pow_recursion(int x, int y);
 int square_root(int x, int n);
 int _sqrt_recursion(int n);
-int primo(int n, int x)
+int primo(int n, int x);
 int is_prime_number(int n);
 int lentf(char *s, int lent);
 int comparar(char *s, int lent, int o);
