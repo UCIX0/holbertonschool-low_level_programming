@@ -13,7 +13,7 @@ int is_palindrome(char *s)
 
 	lent = lentf(s, lent);
 	io = comparar(s, lent - 1, o);
-	return (lent);
+	return (io);
 }
 
 /**
