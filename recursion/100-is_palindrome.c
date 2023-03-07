@@ -1,9 +1,9 @@
 #include "main.h"
 
 /**
- * is_palindrome- Es palindromo?
+ * is_palindrome- is a palindrome?
  * @s: string
- * Return: 1 or 0
+ * Return: 1 if a string is a palindrome and 0 if not
  */
 int is_palindrome(char *s)
 {
@@ -33,7 +33,7 @@ int lentf(char *s, int lent)
 }
 
 /**
- * comparar- lent string
+ * comparar- compara string
  * @s: string
  * @lent: lent of string
  * @o: var 0
