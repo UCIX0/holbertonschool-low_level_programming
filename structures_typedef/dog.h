@@ -1,5 +1,5 @@
-#ifndef _dawg
-#define _dawg
+#ifndef dog_h
+#define dog_h
 #include <stdlib.h>
 #include <stdio.h>
 
