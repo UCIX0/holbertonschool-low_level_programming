@@ -1,50 +1,92 @@
-#include "main.h"
-#include <elf.h>
-/**
- * main - copy text from one file to another
- * @argc: the number of arguments passed the function
- * @argv: array of arguments passed the function as char *
- * Return: 0 on Success, 98 if not ELF file or error
- */
-int main(int argc, char *argv[])
-{
-	const char *f_mem = NULL;
-	char buff[64];
-	int fd = -1;
-	struct stat info = {0};
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <errno.h>
 
-	/* may need to handle multiple arguments, for now stick with 1 */
-	if (argc != 2)
-		return (0);
-	/* open the passed executable */
-	fd = open(argv[1], O_RDONLY);
-	if (fd = -1)
-		dprintf(STDERR_FILENO, "Unable to Open %s\n", argv[1]), exit(98);
-	/* find the size of the file */
-	if (fstat(fd, &info) != 0)
-	{
-		dprintf(STDERR_FILENO, "Unable to aquire stats for %s\n", argv[1])
-		exit(98);
+typedef struct {
+	uint8_t ei_magic[4];
+	uint8_t ei_class;
+	uint8_t ei_data;
+	uint8_t ei_version;
+	uint8_t ei_osabi;
+	uint8_t ei_abiversion;
+	uint8_t ei_pad[7];
+} Elf_Ident;
+
+typedef struct {
+	uint16_t e_type;
+	uint16_t e_machine;
+	uint32_t e_version;
+	uint64_t e_entry;
+} Elf_Header;
+
+static const char *get_class_str(uint8_t ei_class) {
+	switch (ei_class) {
+		case 1: return "ELF32";
+		case 2: return "ELF64";
+		default: return "<unknown>";
 	}
-	/* map the file into memory */
-	f_mem = mmap(NULL, info.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-	if (f_mem == MAP_FAILED)
-		dprintf(STDERR_FILENO, "Unable to map %s\n", argv[1]);
+}
 
-	if (f_mem[0] == 0x7f && f_mem[1] == 'E' && f_mem[2] == 'L' && f_mem[3] == 'F')
-	{
-		printf("ELF FILE\n");
-		p_elf(f_mem);
+static const char *get_data_str(uint8_t ei_data) {
+	switch (ei_data) {
+		case 1: return "2's complement, little endian";
+		case 2: return "2's complement, big endian";
+		default: return "<unknown>";
 	}
-	else
-		dprintf(STDERR_FILENO, "Non-ELF file %s\n", argv[1]), exit(98);
+}
 
-	return (0);
+static const char *get_osabi_str(uint8_t ei_osabi) {
+	switch (ei_osabi) {
+		case 0: return "UNIX - System V";
+		case 2: return "UNIX - NetBSD";
+		case 6: return "UNIX - Solaris";
+		default: return "<unknown>";
+	}
 }
-int p_elf(f_mem)
-{
-	if(f_mem[5] == ELFCLASS64)
-	/* 64 bit */
-	else if (f_mem[5] == ELFCLASS32)
-	/* 32 bit  */
+
+static const char *get_type_str(uint16_t e_type) {
+	switch (e_type) {
+		case 2: return "EXEC (Executable file)";
+		case 3: return "DYN (Shared object file)";
+		default: return "<unknown>";
+	}
 }
+
+void print_elf_header(const Elf_Ident *ident, const Elf_Header *header) {
+	printf("ELF Header:\n");
+	printf("  Magic:   ");
+	for (int i = 0; i < 16; i++) {
+		printf("%02x ", ((uint8_t *)ident)[i]);
+	}
+	printf("\n");
+	printf("  Class:                             %s\n", get_class_str(ident->ei_class));
+	printf("  Data:                              %s\n", get_data_str(ident->ei_data));
+	printf("  Version:                           %u (current)\n", ident->ei_version);
+	printf("  OS/ABI:                            %s\n", get_osabi_str(ident->ei_osabi));
+	printf("  ABI Version:                       %u\n", ident->ei_abiversion);
+	printf("  Type:                              %s\n", get_type_str(header->e_type));
+	printf("  Entry point address:               %#llx\n", (unsigned long long)header->e_entry);
+}
+
+int main(int argc, char **argv) {
+	if (argc != 2) {
+		fprintf(stderr, "Usage: elf_header elf_filename\n");
+		return 98;
+	}
+
+	int fd = open(argv[1], O_RDONLY);
+	if (fd < 0) {
+		fprintf(stderr, "Error opening file '%s': %s\n", argv[1], strerror(errno));
+		return 98;
+	}
+
+	Elf_Ident ident;
+	ssize_t ident_bytes_read = read(fd, &ident, sizeof(ident));
+	if (ident_bytes_read != sizeof(ident) || memcmp(ident.ei_magic, "\x7F" "ELF", 4) != 0) {
+		close(fd);
+		fprintf(stderr, "Error: Not an ELF file or cannot read the ELF header\n");
+		return 98;
+	}
