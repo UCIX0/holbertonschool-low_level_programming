@@ -69,12 +69,12 @@ void print_elf_header(const Elf_Ident *ident, const Elf_Header *header) {
 	printf("  OS/ABI:                            %s\n", get_osabi_str(ident->ei_osabi));
 	printf("  ABI Version:                       %u\n", ident->ei_abiversion);
 	printf("  Type:                              %s\n", get_type_str(header->e_type));
-	printf("  Entry point address:               %#llx\n", (unsigned long long)header->e_entry);
+	printf("  Entry point address:               %#lx\n", (unsigned long)header->e_entry);
 }
 
 int main(int argc, char **argv) {
 	int fd;
-	ssize_t ident_bytes_read;
+	ssize_t ident_bytes_read, header_bytes_read;
 	Elf_Ident ident;
 	Elf_Header header;
 
@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
 		return 98;
 	}
 
-	ssize_t header_bytes_read = read(fd, &header, sizeof(header));
+	header_bytes_read = read(fd, &header, sizeof(header));
 	if (header_bytes_read != sizeof(header)) {
 		fprintf(stderr, "Error reading ELF header from file '%s': %s\n", argv[1], strerror(errno));
 		close(fd);
