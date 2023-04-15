@@ -56,7 +56,7 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	printf("  Magic:   ");
 	for (i = 0; i < EI_NIDENT; i++)
 	{
-		printf("%02x ", hdr->e_ident[i]);
+		printf("%02x-", hdr->e_ident[i]);
 	}
 	printf("\n");
 	printf("  Class:                             %s\n",
