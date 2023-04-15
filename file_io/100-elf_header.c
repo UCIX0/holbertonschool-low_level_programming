@@ -110,28 +110,21 @@ void display_os_abi(Elf32_Ehdr *hdr)
  */
 void display_type_entry(Elf32_Ehdr *hdr)
 {
-	printf("  Type:                              ");
-	switch (hdr->e_type)
-	{
-		case ET_EXEC:
-			printf("EXEC (Executable file)");
-			break;
-		case ET_DYN:
-			printf("DYN (Shared object file)");
-			break;
-		default:
-			if (hdr->e_ident[EI_DATA] == ELFDATA2MSB && hdr->e_type == ET_EXEC)
-			{
-				printf("EXEC (Executable file)");
-			}
-			else
-			{
-				printf("UNKNOWN");
-			}
-			break;
-	}
-	printf("\n");
-	printf("  Entry point address:               %#x\n", hdr->e_entry);
+    printf("  Type:                              ");
+    if (hdr->e_type == ET_EXEC || (hdr->e_ident[EI_DATA] == ELFDATA2MSB && hdr->e_type == ET_EXEC))
+    {
+        printf("EXEC (Executable file)");
+    }
+    else if (hdr->e_type == ET_DYN)
+    {
+        printf("DYN (Shared object file)");
+    }
+    else
+    {
+        printf("UNKNOWN");
+    }
+    printf("\n");
+    printf("  Entry point address:               %#x\n", hdr->e_entry);
 }
 /**
  * display_elf_header - display all ELF header info
