@@ -69,7 +69,8 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	printf("  Class:                             %s\n",
 			hdr->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
 	printf("  Data:                              %s\n",
-			hdr->e_ident[EI_DATA] == ELFDATA2LSB ? "2's complement, little endian" : "2's complement, big endian");
+			hdr->e_ident[EI_DATA] == ELFDATA2LSB ?
+			"2's complement, little endian" : "2's complement, big endian");
 	printf("  Version:                           %d (current)\n",
 			hdr->e_ident[EI_VERSION]);
 	printf("  OS/ABI:                            ");
@@ -104,4 +105,3 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	printf("\n");
 	printf("  Entry point address:               %#x\n", hdr->e_entry);
 }
-
