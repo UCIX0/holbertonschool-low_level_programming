@@ -53,19 +53,19 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	int i;
 
 	printf("ELF Header:\n");
-	printf(" Magic:   ");
+	printf("  Magic:   ");
 	for (i = 0; i < EI_NIDENT; i++)
 	{
 		printf("%02x ", hdr->e_ident[i]);
 	}
 	printf("\n");
-	printf(" Class:                             %s\n",
+	printf("  Class:                             %s\n",
 			hdr->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
-	printf(" Data:                              %s\n",
+	printf("  Data:                              %s\n",
 			hdr->e_ident[EI_DATA] == ELFDATA2LSB ? "2's complement, little endian" : "2's complement, big endian");
-	printf(" Version:                           %d (current)\n",
+	printf("  Version:                           %d (current)\n",
 			hdr->e_ident[EI_VERSION]);
-	printf(" OS/ABI:                            ");
+	printf("  OS/ABI:                            ");
 	switch (hdr->e_ident[EI_OSABI])
 	{
 		case ELFOSABI_SYSV:
@@ -82,9 +82,9 @@ void display_elf_header(Elf32_Ehdr *hdr)
 			break;
 	}
 	printf("\n");
-	printf(" ABI Version:                       %d\n",
+	printf("  ABI Version:                       %d\n",
 			hdr->e_ident[EI_ABIVERSION]);
-	printf(" Type:                              ");
+	printf("  Type:                              ");
 	switch (hdr->e_type)
 	{
 		case ET_EXEC:
@@ -95,6 +95,6 @@ void display_elf_header(Elf32_Ehdr *hdr)
 			break;
 	}
 	printf("\n");
-	printf(" Entry point address:               %#x\n",
-			hdr->e_entry);
+	printf("  Entry point address:               %#x\n", hdr->e_entry);
 }
+
