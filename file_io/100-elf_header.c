@@ -74,8 +74,9 @@ void display_class_data_version(Elf32_Ehdr *hdr)
 	printf("  Data:                              %s\n",
 		hdr->e_ident[EI_DATA] == ELFDATA2LSB ?
 		"2's complement, little endian" : "2's complement, big endian");
-	printf("  Version:                           %d (current)\n",
-		hdr->e_ident[EI_VERSION]);
+	printf("  Version:                           %d%s\n",
+		hdr->e_ident[EI_VERSION],
+		hdr->e_ident[EI_VERSION] == EV_CURRENT ? " (current)" : "");
 }
 /**
  * display_os_abi - show ELF OS/ABI and version
