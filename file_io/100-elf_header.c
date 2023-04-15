@@ -9,18 +9,20 @@
 void display_elf_header(Elf32_Ehdr *hdr);
 
 int main(int argc, char *argv[]) {
+	int fd;
+	Elf32_Ehdr hdr;
+
 	if (argc != 2) {
 		fprintf(stderr, "Usage: elf_header elf_filename\n");
 		exit(98);
 	}
 
-	int fd = open(argv[1], O_RDONLY);
+	fd = open(argv[1], O_RDONLY);
 	if (fd < 0) {
 		perror("Error opening file");
 		exit(98);
 	}
 
-	Elf32_Ehdr hdr;
 	if (read(fd, &hdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr)) {
 		perror("Error reading ELF header");
 		close(fd);
@@ -39,9 +41,11 @@ int main(int argc, char *argv[]) {
 }
 
 void display_elf_header(Elf32_Ehdr *hdr) {
+	int i;
+
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
-	for (int i = 0; i < EI_NIDENT; i++) {
+	for (i = 0; i < EI_NIDENT; i++) {
 		printf("%02x ", hdr->e_ident[i]);
 	}
 	printf("\n");
