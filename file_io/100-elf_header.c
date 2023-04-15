@@ -2,9 +2,11 @@
 
 void print_elf_header(const ElfHeader *header)
 {
+	int i;
+
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
-	for (int i = 0; i < 16; ++i)
+	for (i = 0; i < 16; ++i)
 	{
 		printf("%02x ", header->magic[i]);
 	}
@@ -25,18 +27,19 @@ void print_elf_header(const ElfHeader *header)
 			header->type == 2 ? "EXEC" : "DYN");
 	printf("  Entry point address:               0x%lx\n", header->entry);
 }
-
 int read_elf_header(const char *filename, ElfHeader *header)
 {
-	int fd = open(filename, O_RDONLY);
+	int fd;
+	ssize_t bytes_read;
+
+	fd = open(filename, O_RDONLY);
 
 	if (fd < 0)
 	{
 		return (-1);
 	}
 
-	ssize_t bytes_read = read(fd, header, sizeof(ElfHeader));
-
+	bytes_read = read(fd, header, sizeof(ElfHeader));
 
 	if (bytes_read != sizeof(ElfHeader)
 		|| memcmp(header->magic,
@@ -52,13 +55,13 @@ int read_elf_header(const char *filename, ElfHeader *header)
 
 int main(int argc, char *argv[])
 {
+	ElfHeader header;
+
 	if (argc != 2)
 	{
 		fprintf(stderr, "Usage: %s elf_filename\n", argv[0]);
 		exit(98);
 	}
-
-	ElfHeader header;
 
 	if (read_elf_header(argv[1], &header) != 0)
 	{
