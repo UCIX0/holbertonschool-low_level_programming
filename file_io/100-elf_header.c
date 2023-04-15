@@ -1,5 +1,8 @@
 #include "main.h"
-
+/**
+ * print_elf_header - Imprime la información contenida en la cabecera ELF
+ * @header: puntero a estructura ElfHeader, contiene la información de ELF
+ */
 void print_elf_header(const ElfHeader *header)
 {
 	int i;
@@ -27,6 +30,13 @@ void print_elf_header(const ElfHeader *header)
 			header->type == 2 ? "EXEC" : "DYN");
 	printf("  Entry point address:               0x%lx\n", header->entry);
 }
+/**
+ * read_elf_header - Lee la cabecera de un archivo ELF y la guarda en ElfHeader
+ * @filename: nombre del archivo ELF a leer.
+ * @header: puntero a ElfHeader.
+ *
+ * Return: 0 en caso de éxito, -1 en caso de error.
+ */
 int read_elf_header(const char *filename, ElfHeader *header)
 {
 	int fd;
@@ -52,7 +62,13 @@ int read_elf_header(const char *filename, ElfHeader *header)
 	close(fd);
 	return (0);
 }
-
+/**
+ * main - imprime la información de la cabecera de un archivo ELF.
+ * @argc: número de argumentos de la línea de comandos.
+ * @argv: matriz de argumentos de la línea de comandos.
+ *
+ * Return: 0 en caso de éxito, 98 en caso de error.
+ */
 int main(int argc, char *argv[])
 {
 	ElfHeader header;
