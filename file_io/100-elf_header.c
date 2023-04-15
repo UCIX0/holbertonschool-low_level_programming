@@ -1,35 +1,39 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <elf.h>
+#include "main.h"
 
-void display_elf_header(Elf32_Ehdr *hdr);
-
-int main(int argc, char *argv[]) {
+/**
+ * main - imprime la información de la cabecera de un archivo ELF.
+ * @argc: número de argumentos de la línea de comandos.
+ * @argv: matriz de argumentos de la línea de comandos.
+ *
+ * Return: 0 en caso de éxito, 98 en caso de error.
+ */
+int main(int argc, char *argv[])
+{
 	int fd;
 	Elf32_Ehdr hdr;
 
-	if (argc != 2) {
+	if (argc != 2)
+	{
 		fprintf(stderr, "Usage: elf_header elf_filename\n");
 		exit(98);
 	}
 
 	fd = open(argv[1], O_RDONLY);
-	if (fd < 0) {
+	if (fd < 0)
+	{
 		perror("Error opening file");
 		exit(98);
 	}
 
-	if (read(fd, &hdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr)) {
+	if (read(fd, &hdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr))
+	{
 		perror("Error reading ELF header");
 		close(fd);
 		exit(98);
 	}
 
-	if (memcmp(hdr.e_ident, ELFMAG, SELFMAG) != 0) {
+	if (memcmp(hdr.e_ident, ELFMAG, SELFMAG) != 0)
+	{
 		fprintf(stderr, "Not an ELF file\n");
 		close(fd);
 		exit(98);
@@ -37,15 +41,21 @@ int main(int argc, char *argv[]) {
 
 	display_elf_header(&hdr);
 	close(fd);
-	return 0;
+	return (0);
 }
 
-void display_elf_header(Elf32_Ehdr *hdr) {
+/**
+ * display_elf_header - Imprime la información contenida en la cabecera ELF
+ * @hdr: puntero a estructura ElfHeader, contiene la información de ELF
+ */
+void display_elf_header(Elf32_Ehdr *hdr)
+{
 	int i;
 
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
-	for (i = 0; i < EI_NIDENT; i++) {
+	for (i = 0; i < EI_NIDENT; i++)
+	{
 		printf("%02x ", hdr->e_ident[i]);
 	}
 	printf("\n");
@@ -56,7 +66,8 @@ void display_elf_header(Elf32_Ehdr *hdr) {
 	printf("  Version:                           %d (current)\n",
 			hdr->e_ident[EI_VERSION]);
 	printf("  OS/ABI:                            ");
-	switch (hdr->e_ident[EI_OSABI]) {
+	switch (hdr->e_ident[EI_OSABI])
+	{
 		case ELFOSABI_SYSV:
 			printf("UNIX - System V");
 			break;
@@ -74,7 +85,8 @@ void display_elf_header(Elf32_Ehdr *hdr) {
 	printf("  ABI Version:                       %d\n",
 			hdr->e_ident[EI_ABIVERSION]);
 	printf("  Type:                              ");
-	switch (hdr->e_type) {
+	switch (hdr->e_type)
+	{
 		case ET_EXEC:
 			printf("EXEC (Executable file)");
 			break;
@@ -83,6 +95,5 @@ void display_elf_header(Elf32_Ehdr *hdr) {
 			break;
 	}
 	printf("\n");
-	printf("  Entry point address:               %#010x\n",
-			hdr->e_entry);
+	printf("  Entry point address:               %#x\n", hdr->e_entry);
 }

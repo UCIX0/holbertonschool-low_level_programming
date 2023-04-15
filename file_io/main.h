@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <elf.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -23,6 +24,8 @@ typedef struct
 	uint16_t type;
 	uint64_t entry;
 } ElfHeader;
+
+void display_elf_header(Elf32_Ehdr *hdr);
 
 ssize_t read_textfile(const char *filename, size_t letters);
 int create_file(const char *filename, char *text_content);
