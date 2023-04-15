@@ -1,63 +1,80 @@
 #include "main.h"
 
-void print_elf_header(const Elf_Ident *ident, const Elf_Header *header) {
+void print_elf_header(const Elf_Ident *ident, const Elf_Header *header)
+{
 	int i;
+
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < 16; i++)
+	{
 		printf("%02x ", ((uint8_t *)ident)[i]);
 	}
 	printf("\n");
-	printf("  Class:                             %s\n", get_class_str(ident->ei_class));
-	printf("  Data:                              %s\n", get_data_str(ident->ei_data));
-	printf("  Version:                           %u (current)\n", ident->ei_version);
-	printf("  OS/ABI:                            %s\n", get_osabi_str(ident->ei_osabi));
-	printf("  ABI Version:                       %u\n", ident->ei_abiversion);
-	printf("  Type:                              %s\n", get_type_str(header->e_type));
-	printf("  Entry point address:               %#lx\n", (unsigned long)header->e_entry);
+	printf("  Class:                             %s\n",
+	get_class_str(ident->ei_class));
+	printf("  Data:                              %s\n",
+	get_data_str(ident->ei_data));
+	printf("  Version:                           %u (current)\n",
+	ident->ei_version);
+	printf("  OS/ABI:                            %s\n",
+	get_osabi_str(ident->ei_osabi));
+	printf("  ABI Version:                       %u\n",
+	ident->ei_abiversion);
+	printf("  Type:                              %s\n",
+	get_type_str(header->e_type));
+	printf("  Entry point address:               %#lx\n",
+	(unsigned long)header->e_entry);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 	int fd;
 	ssize_t ident_bytes_read, header_bytes_read;
 	Elf_Ident ident;
 	Elf_Header header;
 
-	if (argc != 2) {
+	if (argc != 2)
+	{
 		fprintf(stderr, "Usage: elf_header elf_filename\n");
-		return 98;
+		return (98);
 	}
 
 	fd = open(argv[1], O_RDONLY);
-	if (fd < 0) {
+	if (fd < 0)
+	{
 		fprintf(stderr, "Error opening file '%s': %s\n", argv[1], strerror(errno));
-		return 98;
+		return (98);
 	}
 
 	ident_bytes_read = read(fd, &ident, sizeof(ident));
-	if (ident_bytes_read != sizeof(ident)) {
-		fprintf(stderr, "Error reading ELF ident from file '%s': %s\n", argv[1], strerror(errno));
+	if (ident_bytes_read != sizeof(ident))
+	{
+		fprintf(stderr, "Error reading ELF ident from file '%s': %s\n",
+		argv[1], strerror(errno));
 		close(fd);
-		return 98;
+		return (98);
 	}
 
-	if (memcmp(ident.ei_magic, "\x7F" "ELF", 4) != 0) {
+	if (memcmp(ident.ei_magic, "\x7F" "ELF", 4) != 0)
+	{
 		fprintf(stderr, "File '%s' is not an ELF file\n", argv[1]);
 		close(fd);
-		return 98;
+		return (98);
 	}
 
-	if (lseek(fd, sizeof(ident), SEEK_SET) < 0) {
+	if (lseek(fd, sizeof(ident), SEEK_SET) < 0)
+	{
 		fprintf(stderr, "Error seeking in file '%s': %s\n", argv[1], strerror(errno));
 		close(fd);
-		return 98;
+		return (98);
 	}
 
 	header_bytes_read = read(fd, &header, sizeof(header));
 	if (header_bytes_read != sizeof(header)) {
 		fprintf(stderr, "Error reading ELF header from file '%s': %s\n", argv[1], strerror(errno));
 		close(fd);
-		return 98;
+		return (98);
 	}
 
 	print_elf_header(&ident, &header);
