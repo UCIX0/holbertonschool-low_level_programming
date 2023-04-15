@@ -119,6 +119,16 @@ void display_type_entry(Elf32_Ehdr *hdr)
 		case ET_DYN:
 			printf("DYN (Shared object file)");
 			break;
+		default:
+			if (hdr->e_ident[EI_DATA] == ELFDATA2MSB && hdr->e_type == ET_EXEC)
+			{
+				printf("EXEC (Executable file)");
+			}
+			else
+			{
+				printf("UNKNOWN");
+			}
+			break;
 	}
 	printf("\n");
 	printf("  Entry point address:               %#x\n", hdr->e_entry);
