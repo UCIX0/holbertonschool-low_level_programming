@@ -1,84 +1,73 @@
 #include "main.h"
 
-void print_elf_header(const Elf_Ident *ident, const Elf_Header *header)
+void print_elf_header(const ElfHeader *header)
 {
-	int i;
-
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
-	for (i = 0; i < 16; i++)
+	for (int i = 0; i < 16; ++i)
 	{
-		printf("%02x ", ((uint8_t *)ident)[i]);
+		printf("%02x ", header->magic[i]);
 	}
 	printf("\n");
 	printf("  Class:                             %s\n",
-	get_class_str(ident->ei_class));
-	printf("  Data:                              %s\n",
-	get_data_str(ident->ei_data));
+			header->class == 1 ? "ELF32" : "ELF64");
+	printf("  Data:                              2's complement, %s endian\n",
+			header->data == 1 ? "little" : "big");
 	printf("  Version:                           %u (current)\n",
-	ident->ei_version);
+	header->version);
 	printf("  OS/ABI:                            %s\n",
-	get_osabi_str(ident->ei_osabi));
-	printf("  ABI Version:                       %u\n",
-	ident->ei_abiversion);
-	printf("  Type:                              %s\n",
-	get_type_str(header->e_type));
-	printf("  Entry point address:               %#lx\n",
-	(unsigned long)header->e_entry);
+			header->osabi == 0 ? "UNIX - System V" :
+			header->osabi == 2 ? "UNIX - NetBSD" :
+			header->osabi == 6 ? "UNIX - Solaris" :
+			"<unknown>");
+	printf("  ABI Version:                       %u\n", header->abiversion);
+	printf("  Type:                              %s (Executable file)\n",
+			header->type == 2 ? "EXEC" : "DYN");
+	printf("  Entry point address:               0x%lx\n", header->entry);
 }
 
-int main(int argc, char **argv)
+int read_elf_header(const char *filename, ElfHeader *header)
 {
-	int fd;
-	ssize_t ident_bytes_read, header_bytes_read;
-	Elf_Ident ident;
-	Elf_Header header;
+	int fd = open(filename, O_RDONLY);
 
-	if (argc != 2)
-	{
-		fprintf(stderr, "Usage: elf_header elf_filename\n");
-		return (98);
-	}
-
-	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 	{
-		fprintf(stderr, "Error opening file '%s': %s\n", argv[1], strerror(errno));
-		return (98);
+		return (-1);
 	}
 
-	ident_bytes_read = read(fd, &ident, sizeof(ident));
-	if (ident_bytes_read != sizeof(ident))
+	ssize_t bytes_read = read(fd, header, sizeof(ElfHeader));
+
+
+	if (bytes_read != sizeof(ElfHeader)
+		|| memcmp(header->magic,
+			"\x7F ELF",
+				4) != 0)
 	{
-		fprintf(stderr, "Error reading ELF ident from file '%s': %s\n",
-		argv[1], strerror(errno));
 		close(fd);
-		return (98);
+		return (-1);
 	}
-
-	if (memcmp(ident.ei_magic, "\x7F" "ELF", 4) != 0)
-	{
-		fprintf(stderr, "File '%s' is not an ELF file\n", argv[1]);
-		close(fd);
-		return (98);
-	}
-
-	if (lseek(fd, sizeof(ident), SEEK_SET) < 0)
-	{
-		fprintf(stderr, "Error seeking in file '%s': %s\n", argv[1], strerror(errno));
-		close(fd);
-		return (98);
-	}
-
-	header_bytes_read = read(fd, &header, sizeof(header));
-	if (header_bytes_read != sizeof(header)) {
-		fprintf(stderr, "Error reading ELF header from file '%s': %s\n", argv[1], strerror(errno));
-		close(fd);
-		return (98);
-	}
-
-	print_elf_header(&ident, &header);
 	close(fd);
+	return (0);
+}
 
-	return 0;
+int main(int argc, char *argv[])
+{
+	if (argc != 2)
+	{
+		fprintf(stderr, "Usage: %s elf_filename\n", argv[0]);
+		exit(98);
+	}
+
+	ElfHeader header;
+
+	if (read_elf_header(argv[1], &header) != 0)
+	{
+		fprintf(stderr,
+		"Error: Not an ELF file or failed to read the ELF header: %s\n",
+		strerror(errno));
+		exit(98);
+	}
+
+	print_elf_header(&header);
+	return (0);
 }
