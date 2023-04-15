@@ -1,11 +1,9 @@
 #include "main.h"
-
 /**
- * main - imprime la información de la cabecera de un archivo ELF.
- * @argc: número de argumentos de la línea de comandos.
- * @argv: matriz de argumentos de la línea de comandos.
- *
- * Return: 0 en caso de éxito, 98 en caso de error.
+ * main - read and display ELF header info
+ * @argc: arg count
+ * @argv: arg vector
+ * Return: 0 on success, exit on error
  */
 int main(int argc, char *argv[])
 {
@@ -43,19 +41,17 @@ int main(int argc, char *argv[])
 	close(fd);
 	return (0);
 }
-
 /**
- * display_elf_header - Imprime la información contenida en la cabecera ELF
- * @hdr: puntero a estructura ElfHeader, contiene la información de ELF
+ * display_magic - display ELF magic bytes
+ * @hdr: ELF header
  */
-void display_elf_header(Elf32_Ehdr *hdr)
+void display_magic(Elf32_Ehdr *hdr)
 {
 	int i;
 
-	printf("ELF Header:\n");
 	printf("  Magic:   ");
 	for (i = 0; i < EI_NIDENT; i++)
-		{
+	{
 		if (i == EI_NIDENT - 1)
 		{
 			printf("%02x", hdr->e_ident[i]);
@@ -66,13 +62,27 @@ void display_elf_header(Elf32_Ehdr *hdr)
 		}
 	}
 	printf("\n");
+}
+/**
+ * display_class_data_version - show ELF class, data, and version
+ * @hdr: ELF header
+ */
+void display_class_data_version(Elf32_Ehdr *hdr)
+{
 	printf("  Class:                             %s\n",
-			hdr->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
+		hdr->e_ident[EI_CLASS] == ELFCLASS32 ? "ELF32" : "ELF64");
 	printf("  Data:                              %s\n",
-			hdr->e_ident[EI_DATA] == ELFDATA2LSB ?
-			"2's complement, little endian" : "2's complement, big endian");
+		hdr->e_ident[EI_DATA] == ELFDATA2LSB ?
+		"2's complement, little endian" : "2's complement, big endian");
 	printf("  Version:                           %d (current)\n",
-			hdr->e_ident[EI_VERSION]);
+		hdr->e_ident[EI_VERSION]);
+}
+/**
+ * display_os_abi - show ELF OS/ABI and version
+ * @hdr: ELF header
+ */
+void display_os_abi(Elf32_Ehdr *hdr)
+{
 	printf("  OS/ABI:                            ");
 	switch (hdr->e_ident[EI_OSABI])
 	{
@@ -91,7 +101,14 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	}
 	printf("\n");
 	printf("  ABI Version:                       %d\n",
-			hdr->e_ident[EI_ABIVERSION]);
+		hdr->e_ident[EI_ABIVERSION]);
+}
+/**
+ * display_type_entry - show ELF type and entry point
+ * @hdr: ELF header
+ */
+void display_type_entry(Elf32_Ehdr *hdr)
+{
 	printf("  Type:                              ");
 	switch (hdr->e_type)
 	{
@@ -104,4 +121,16 @@ void display_elf_header(Elf32_Ehdr *hdr)
 	}
 	printf("\n");
 	printf("  Entry point address:               %#x\n", hdr->e_entry);
+}
+/**
+ * display_elf_header - display all ELF header info
+ * @hdr: ELF header
+ */
+void display_elf_header(Elf32_Ehdr *hdr)
+{
+	printf("ELF Header:\n");
+	display_magic(hdr);
+	display_class_data_version(hdr);
+	display_os_abi(hdr);
+	display_type_entry(hdr);
 }
