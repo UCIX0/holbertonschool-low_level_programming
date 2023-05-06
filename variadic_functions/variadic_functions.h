@@ -4,7 +4,14 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-typedef struct printer{
+
+/**
+ * struct printer - estructura para asociar símbolos y funciones de impresión
+ * @symbol: símbolo que representa el formato de impresión
+ * @print: función de impresión correspondiente al símbolo dado
+*/
+typedef struct printer
+{
 char *symbol;
 void (*print)(va_list arg);
 } printer_t;
