@@ -14,7 +14,7 @@ int suma_them_all(const unsigned int n, ...)
 
 	va_list list;
 	int suma = 0;
-	int i;
+	unsigned int i;
 
 	va_start(list, n);
 
