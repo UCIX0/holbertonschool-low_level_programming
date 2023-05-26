@@ -16,7 +16,7 @@ int binary_search_recursive(int *array, int start, int end, int value)
 {
 	if (start > end)
 	{
-		return -1; 
+		return -1;
 	}
 
 	int mid = start + (end - start) / 2;
@@ -25,15 +25,15 @@ int binary_search_recursive(int *array, int start, int end, int value)
 
 	if (array[mid] == value)
 	{
-		return mid; 
+		return mid;
 	}
 	else if (array[mid] > value)
 	{
-		return binary_search_recursive(array, start, mid - 1, value); 
+		return binary_search_recursive(array, start, mid - 1, value);
 	}
 	else
 	{
-		return binary_search_recursive(array, mid + 1, end, value); 
+		return binary_search_recursive(array, mid + 1, end, value);
 	}
 }
 
