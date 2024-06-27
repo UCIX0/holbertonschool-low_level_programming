@@ -5,7 +5,7 @@
  */
 int main(void)
 {
-	fprintf(stderr, "and that piece of art is useful\"");
-	fprintf(stderr, " - Dora Korpar, 2015-10-19\n");
+	fwrite("and that piece of art is useful\"", 1, 32, stderr);
+	fwrite(" - Dora Korpar, 2015-10-19\n", 1, 27, stderr);
 	return (1);
 }
