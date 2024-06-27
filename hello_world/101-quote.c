@@ -1,16 +1,11 @@
-#include <unistd.h>
-#include <sys/syscall.h>
+#include <stdio.h>
 /**
  * main - function main
- *
- * Return: Always void (Success)
+ * Return: 1 always
  */
 int main(void)
 {
-	const char *msg1 = "and that piece of art is useful\"";
-	const char *msg2 = " - Dora Korpar, 2015-10-19\n";
-
-	syscall(SYS_write, STDERR_FILENO, msg1, 29);
-	syscall(SYS_write, STDERR_FILENO, msg2, 27);
+	fprintf(stderr, "and that piece of art is useful\"");
+	fprintf(stderr, " - Dora Korpar, 2015-10-19\n");
 	return (1);
 }
