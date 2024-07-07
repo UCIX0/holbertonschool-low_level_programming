@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "main.h"
 /**
  * jack_bauer - ultomo digito absoluto
  *
