@@ -23,29 +23,29 @@ void print_times_table(int n)
 
 			if (j > 0)
 			{
-				putchar(',');
-				putchar(' ');
+				_putchar(',');
+				_putchar(' ');
 				if (product < 100)
-					putchar(' ');
+					_putchar(' ');
 				if (product < 10)
-					putchar(' ');
+					_putchar(' ');
 			}
 			if (product >= 100)
 			{
-				putchar((product / 100) + '0');
-				putchar(((product / 10) % 10) + '0');
-				putchar((product % 10) + '0');
+				_putchar((product / 100) + '0');
+				_putchar(((product / 10) % 10) + '0');
+				_putchar((product % 10) + '0');
 			}
 			else if (product >= 10)
 			{
-				putchar((product / 10) + '0');
-				putchar((product % 10) + '0');
+				_putchar((product / 10) + '0');
+				_putchar((product % 10) + '0');
 			}
 			else
 			{
-				putchar(product + '0');
+				_putchar(product + '0');
 			}
 		}
-		putchar('\n');
+		_putchar('\n');
 	}
 }
