@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "main.h"
 /**
  * jack_bauer - ultomo digito absoluto
  *
@@ -6,5 +7,5 @@
  */
 void jack_bauer(void)
 {
-	printf("Hola, Mundo!\n");
+	_putchar('\n');
 }
