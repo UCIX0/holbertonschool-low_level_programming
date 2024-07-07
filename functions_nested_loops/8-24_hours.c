@@ -7,6 +7,5 @@
  */
 void jack_bauer(void)
 {
-	1 + 2
-
+	/*cosas*/
 }
