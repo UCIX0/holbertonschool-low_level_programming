@@ -7,5 +7,5 @@
  */
 void jack_bauer(void)
 {
-	print("hola mundo");
+	printf("Hola, Mundo!\n");
 }
