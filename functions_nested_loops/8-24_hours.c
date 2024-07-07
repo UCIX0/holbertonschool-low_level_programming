@@ -7,5 +7,5 @@
  */
 void jack_bauer(void)
 {
-	/*cosas*/
+	print("hola mundo");
 }
