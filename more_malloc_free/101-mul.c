@@ -22,7 +22,6 @@ void _print(char *str, int l)
 		i++;
 	}
 	_putchar('\n');
-	free(str);
 }
 
 /**
