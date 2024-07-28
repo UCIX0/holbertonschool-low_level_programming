@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
  * _print - moves a string one place to the left and prints the string
@@ -22,7 +23,6 @@ void _print(char *str, int l)
 	}
 
 	_putchar('\n');
-	free(str);
 }
 
 /**
@@ -84,8 +84,8 @@ int check_for_digits(char **av)
 
 /**
  * init - initializes a string
- * @str: sting to initialize
- * @l: length of strinf
+ * @str: string to initialize
+ * @l: length of string
  *
  * Return: void
  */
@@ -105,7 +105,6 @@ void init(char *str, int l)
  *
  * Return: zero, or exit status of 98 if failure
  */
-
 int main(int argc, char *argv[])
 {
 	int l1, l2, ln, ti, i;
@@ -144,5 +143,6 @@ int main(int argc, char *argv[])
 		}
 	}
 	_print(a, ln - 1);
+	free(a);
 	return (0);
 }
