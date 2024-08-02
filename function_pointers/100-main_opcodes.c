@@ -2,14 +2,15 @@
 #include <stdlib.h>
 
 /**
- * print_opcodes - Prints the opcodes of the print_opcodes function.
+ * print_opcodes - Prints the opcodes of the main function.
+ * @addr: Pointer to the main function.
  * @n: The number of bytes to print.
  *
  * This function prints the first n bytes of the function's opcodes in
  * hexadecimal format, each opcode being two characters long and separated
  * by a space.
  */
-void print_opcodes(int n)
+void print_opcodes(void *addr, int n)
 {
 	unsigned char *main_ptr = (unsigned char *)print_opcodes;
 	int i;
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
 		return (2);
 	}
 
-	print_opcodes(num_bytes);
+	print_opcodes((void *)main, num_bytes);
 
 	return (0);
 }
