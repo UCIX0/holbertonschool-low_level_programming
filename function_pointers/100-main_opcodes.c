@@ -1,62 +1,37 @@
-#include <stdio.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 /**
- * print_opcodes - Prints the opcodes of the main function.
- * @addr: Pointer to the main function.
- * @n: The number of bytes to print.
+ * main - entry point for program
+ * @argc: arg counter, number of args
+ * @argv: array of pointers to args, in order given
  *
- * This function prints the first n bytes of the function's opcodes in
- * hexadecimal format, each opcode being two characters long and separated
- * by a space.
- */
-void print_opcodes(void *addr, int n)
-{
-	unsigned char *main_ptr = (unsigned char *)print_opcodes;
-	int i;
-
-	for (i = 0; i < n; i++)
-	{
-		printf("%02x", main_ptr[i]);
-		if (i < n - 1)
-		{
-			printf(" ");
-		}
-	}
-	printf("\n");
-}
-
-/**
- * main - Entry point of the program.
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line arguments.
- *
- * This function checks if the correct number of arguments is provided,
- * converts the argument to an integer, and calls the print_opcodes function
- * with the given number of bytes. If the number of arguments is incorrect,
- * it prints an error message and exits with status 1. If the number of bytes
- * is negative, it prints an error message and exits with status 2.
- *
- * Return: 0 on success, 1 if the number of arguments is incorrect, 2 if the
- *         number of bytes is negative.
+ * Return: 0 on success, 1 if argc not right, 2 if bytes is negative
  */
 int main(int argc, char *argv[])
 {
+	int (*f)(int, char**);
+	int i = 0;
+	int hexByte;
+
 	if (argc != 2)
 	{
 		printf("Error\n");
-		return (1);
+		exit(1);
 	}
-
-	int num_bytes = atoi(argv[1]);
-
-	if (num_bytes < 0)
+	else if (atoi(argv[1]) < 0)
 	{
 		printf("Error\n");
-		return (2);
+		exit(2);
 	}
-
-	print_opcodes((void *)main, num_bytes);
-
+	f = main;
+	while (i < atoi(argv[1]))
+	{
+		hexByte = *(unsigned char *)(f + i);
+		printf("%.2x", hexByte);
+		if (i < atoi(argv[1]) - 1)
+			putchar(' ');
+		i++;
+	}
+	putchar('\n');
 	return (0);
 }
