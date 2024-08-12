@@ -1,19 +1,21 @@
 section .data
-    hello_msg db 'Hello, World', 10  ; Mensaje con salto de línea
-    hello_len equ $ - hello_msg       ; Longitud del mensaje
+    msg db 'Hello, World'fasd  ; El mensaje a imprimir seguido de una nueva línea
+    len equ $ - msg              ; Calcula la longitud del mensaje
 
 section .text
     global _start
 
 _start:
-    ; Llamada al sistema write (sys_write)
-    mov rax, 1              ; Número de syscall para write (1)
-    mov rdi, 1              ; File descriptor 1 (stdout)
-    mov rsi, hello_msg      ; Dirección del mensaje
-    mov rdx, hello_len      ; Longitud del mensaje
-    syscall                 ; Invocar la llamada al sistema
+    ; Escribir el mensaje en stdout (file descriptor 1)
+    mov rax, 1          ; syscall number for write
+    mov rdi, 1          ; file descriptor 1 (stdout)
+    mov rsi, msg        ; dirección del mensaje a escribir
+    mov rdx, len        ; longitud del mensaje
+    syscall             ; llamada al sistema
 
-    ; Llamada al sistema exit (sys_exit)
-    mov rax, 60             ; Número de syscall para exit (60)
-    xor rdi, rdi            ; Código de salida 0
-    syscall                 ; Invocar la llamada al sistema
+    ; Salir del programa
+    mov rax, 60         ; syscall number for exit
+    xor rdi, rdi        ; estado de salida 0
+    syscall             ; llamada al sistema
+nasm -f elf64 100-hello_world.asm && ld -s -o hello 100-hello_world.o
+nasm -f elf64 100-hello_world.asm && ld -s -o 100-hello_world hello.o
