@@ -1,18 +1,19 @@
 section .data
-    hello db 'Hello, World', 0xA  ; The string to print, followed by a newline (0xA)
+    hello_msg db 'Hello, World', 10  ; Mensaje con salto de línea
+    hello_len equ $ - hello_msg       ; Longitud del mensaje
 
 section .text
     global _start
 
 _start:
-    ; write(1, hello, 14)
-    mov rax, 1          ; syscall number for write
-    mov rdi, 1          ; file descriptor 1 (stdout)
-    mov rsi, hello      ; pointer to the string to print
-    mov rdx, 14         ; length of the string (including the newline)
-    syscall             ; invoke the system call
+    ; Llamada al sistema write (sys_write)
+    mov rax, 1              ; Número de syscall para write (1)
+    mov rdi, 1              ; File descriptor 1 (stdout)
+    mov rsi, hello_msg      ; Dirección del mensaje
+    mov rdx, hello_len      ; Longitud del mensaje
+    syscall                 ; Invocar la llamada al sistema
 
-    ; exit(0)
-    mov rax, 60         ; syscall number for exit
-    xor rdi, rdi        ; status 0
-    syscall             ; invoke the system call
+    ; Llamada al sistema exit (sys_exit)
+    mov rax, 60             ; Número de syscall para exit (60)
+    xor rdi, rdi            ; Código de salida 0
+    syscall                 ; Invocar la llamada al sistema
